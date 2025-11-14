@@ -1,0 +1,23 @@
+# =========================================================
+#  Block Rewards Configuration
+#  Controls XP and money base values for each block.
+# =========================================================
+
+rewards:
+  STONE:
+    xp: 10.0
+    money: 1.0
+  IRON_ORE:
+    xp: 20.0
+    money: 3.0
+  DIAMOND_ORE:
+    xp: 50.0
+    money: 10.0
+  COAL_ORE:
+    xp: 15.0
+    money: 2.0
+
+# Default values for blocks not listed above
+default:
+  xp: 5.0
+  money: 0.5

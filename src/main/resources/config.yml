@@ -1,0 +1,13 @@
+debug:
+  xp: true
+# Player data & storage
+storage:
+  type: json  # json | sql
+  json:
+    autosave-seconds: 300
+    # the plugin.dataFolder()/players path will be used by default
+  sql:
+    # Placeholder example for future migration
+    jdbc-url: jdbc:mysql://localhost:3306/prisoncore
+    user: root
+    password: password

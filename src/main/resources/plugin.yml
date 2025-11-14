@@ -1,0 +1,12 @@
+name: PrisonsCore
+version: '0.1'
+main: me.panda19.prisonscore.PrisonsCore
+api-version: '1.21'
+authors: [ Panda19 ]
+depend: [ Vault ]
+commands:
+  prisons:
+    description: "Main command for PrisonsCore"
+    usage: "/prisons"
+    permission: "prisonscore.admin"
+    permission-message: "You do not have permission to use this command"

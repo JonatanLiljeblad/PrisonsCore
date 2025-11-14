@@ -1,0 +1,79 @@
+# =========================================================
+#  PrisonsCore - Progression Configuration (Dynamic Edition)
+#  Supports MiniMessage formatting and customizable math formulas.
+# =========================================================
+
+# =========================================================
+#  Level & Prestige Math Settings
+# =========================================================
+levels:
+  base-xp: 100.0
+  xp-multiplier: 1.15
+
+prestige:
+  required-level: 100
+  reset-balance: true
+  reset-xp: true
+  level-reset: 1
+  reward-multiplier: 1.25
+  max-prestige: 999
+
+# =========================================================
+#  Formulas - define how XP, rewards, and scaling are calculated
+#  You can use variables: base, multiplier, level, prestige, blockXp, baseMoney, xp
+#  Math operators: +, -, *, /, ^, parentheses, and decimal numbers
+# =========================================================
+formulas:
+  # XP needed for a given level
+  level-xp: "base * (multiplier ^ (level - 1))"
+
+  # XP gained from mining a block
+  block-xp: "blockXp * (1 + (prestige * 0.05))"
+
+  # Money earned from mining a block
+  money: "baseMoney * (1 + (prestige * 0.1))"
+
+  # XP lost when dying
+  death-xp-loss: "level * 2"
+
+  # 🆕 Prestige reward multiplier formula (new addition)
+  prestige-reward: "base * (1 + (prestige * 0.25))"
+
+
+# =========================================================
+#  Messages - MiniMessage supports <gradient>, <hover>, <bold>, <rainbow>, etc.
+#  Reference: https://docs.advntr.dev/minimessage/format.html
+# =========================================================
+messages:
+
+  # Sent when a player levels up
+  level-up: "<gradient:#00ff9d:#00c3ff>⬆ <bold>LEVEL UP!</bold></gradient> <gray>→</gray> <aqua>Level <white>{level}</white></aqua>"
+
+  prestige:
+    # Title shown when a player prestiges
+    title: "<gradient:#5bd1ff:#b57bff><bold>⚡ You have prestiged!</bold></gradient>"
+    subtitle: "<gray>→</gray> <gold><bold>Prestige {prestige}</bold></gold>"
+    reward: "<gray>Rewards boosted by</gray> <gradient:#00ffcc:#00a3ff><bold>×{multiplier}</bold></gradient>"
+
+  # Debug XP gain message (optional)
+  xp-gain-debug: "<dark_gray>[DEBUG]</dark_gray> <gray>+<green>{amount} XP</green> <dark_gray>(<hover:show_text:'Old XP: {oldXp}\nNew XP: {newXp}\nLevel: {oldLevel}→{newLevel}'><white>{oldXp}</white> <gray>→</gray> <white>{newXp}</white></hover>, <aqua>Lvl {oldLevel}</aqua>→<aqua>{newLevel}</aqua>)"
+
+# =========================================================
+#  🆕 Visual Effects (optional but supported by new code)
+# =========================================================
+effects:
+  level-up:
+    title: "<gradient:#00ff9d:#00c3ff><bold>LEVEL UP!</bold></gradient>"
+    subtitle: "<gray>Now Level <aqua>{level}</aqua></gray>"
+    sound: "ENTITY_PLAYER_LEVELUP"
+  prestige:
+    title: "<gradient:#5bd1ff:#b57bff><bold>PRESTIGE UP!</bold></gradient>"
+    subtitle: "<gold>Prestige {prestige}</gold>"
+    sound: "ENTITY_ENDER_DRAGON_GROWL"
+
+# =========================================================
+#  🆕 Debugging Controls
+# =========================================================
+debug:
+  formulas: false
+  xp: false
