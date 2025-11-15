@@ -53,23 +53,41 @@ class PlayerDataManager(
         val uuid = player.uniqueId
         val cached = cache[uuid]
 
+        // --- Already cached → call callback + update XP on main thread ---
         if (cached != null) {
             cached.touch(player.name)
-            Bukkit.getScheduler().runTask(plugin, Runnable { callback(cached) })
+            Bukkit.getScheduler().runTask(plugin, Runnable {
+                callback(cached)
+                plugin.progressionManager.updatePlayerExpBar(player, cached)
+            })
             return
         }
 
+        // --- Load from disk async ---
         ioExecutor.submit {
             try {
                 val loaded = repo.load(uuid)
-                val profile = loaded?.apply { touch(player.name) } ?: PlayerProfile(uuid, player.name)
+                val profile = loaded?.apply { touch(player.name) }
+                    ?: PlayerProfile(uuid, player.name)
+
                 cache[uuid] = profile
-                Bukkit.getScheduler().runTask(plugin, Runnable { callback(profile) })
+
+                // MUST call callback on main thread
+                Bukkit.getScheduler().runTask(plugin, Runnable {
+                    callback(profile)
+                    plugin.progressionManager.updatePlayerExpBar(player, profile)
+                })
+
             } catch (e: IOException) {
                 plugin.logger.severe("❌ Failed to load profile for $uuid: ${e.message}")
+
                 val fallback = PlayerProfile(uuid, player.name)
                 cache[uuid] = fallback
-                Bukkit.getScheduler().runTask(plugin, Runnable { callback(fallback) })
+
+                Bukkit.getScheduler().runTask(plugin, Runnable {
+                    callback(fallback)
+                    plugin.progressionManager.updatePlayerExpBar(player, fallback)
+                })
             }
         }
     }

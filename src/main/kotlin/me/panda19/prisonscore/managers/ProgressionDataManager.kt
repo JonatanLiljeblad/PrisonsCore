@@ -35,6 +35,9 @@ class ProgressionManager(
 
             profile.xp += amount
             checkLevelUp(player, profile)
+
+            // Always updatebar after XP changed
+            updatePlayerExpBar(player, profile)
         }
 
         // Fire event if leveled up (fireLevelUpEvent will handle cancellation)
@@ -68,6 +71,7 @@ class ProgressionManager(
         while (profile.xp >= xpNeeded && safety++ < SAFETY_LIMIT) {
             profile.xp -= xpNeeded
             profile.level++
+            updatePlayerExpBar(player, profile)
 
             // Prestige check
             if (shouldPrestige(profile)) {
@@ -150,6 +154,30 @@ class ProgressionManager(
             val loaded = plugin.playerDataManager.get(profile.uuid) ?: return@Runnable
             checkLevelUp(player, loaded)
         })
+    }
+
+    /**
+     * Syncs the player's Minecraft XP bar with their custom progression stats.
+     * - player.level displays the current custom level
+     * - player.exp displays progress to the next level (0.0 to 1.0)
+     */
+    fun updatePlayerExpBar(player: Player, profile: PlayerProfile) {
+        val needed = config.getXpForLevel(profile.level)
+
+        // Prevent division-by-zero or invalid config
+        if (needed <= 0) {
+            player.level = profile.level
+            player.exp = 0f
+            return
+        }
+
+        val ratio = (profile.xp / needed).coerceIn(0.0, 1.0)
+
+        // Show current level as the green number above the XP bar
+        player.level = profile.level
+
+        // Show progress as the experience bar fill amount
+        player.exp = ratio.toFloat()
     }
 
     /**

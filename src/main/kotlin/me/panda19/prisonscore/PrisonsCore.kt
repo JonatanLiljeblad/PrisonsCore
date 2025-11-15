@@ -3,6 +3,7 @@ package me.panda19.prisonscore
 import me.panda19.prisonscore.commands.PrisonsCommand
 import me.panda19.prisonscore.config.BlockRewardsConfig
 import me.panda19.prisonscore.config.ProgressionConfig
+import me.panda19.prisonscore.events.PlayerExperienceListener
 import me.panda19.prisonscore.listeners.BlockBreakListener
 import me.panda19.prisonscore.listeners.PlayerJoinListener
 import me.panda19.prisonscore.listeners.PlayerQuitListener
@@ -58,6 +59,7 @@ class PrisonsCore : JavaPlugin() {
         pm.registerEvents(PlayerJoinListener(this), this)
         pm.registerEvents(PlayerQuitListener(this), this)
         pm.registerEvents(BlockBreakListener(this), this)
+        pm.registerEvents(PlayerExperienceListener(this), this)
 
         // === Register Commands ===
         getCommand("prisons")?.apply {
